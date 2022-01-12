@@ -15,3 +15,23 @@ limitations under the License.
 */
 
 package kgway
+
+type Gateway struct {
+	Name        string
+	NameSpace   string
+	GatewayPort int
+	HostName    string
+	HostPort    int
+}
+
+type GatewayService interface {
+	Add(gateway Gateway) error
+	Delete(name string) error
+	Update(name string, gateway Gateway) error
+}
+
+type HTTPService interface {
+	Add(gateway Gateway) GatewayService
+	Delete(name string) GatewayService
+	Update(name string, gateway Gateway) GatewayService
+}
