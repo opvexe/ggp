@@ -16,22 +16,54 @@ limitations under the License.
 
 package kgway
 
-type Gateway struct {
-	Name        string
-	NameSpace   string
-	GatewayPort int
-	HostName    string
-	HostPort    int
-}
+import "context"
 
-type GatewayService interface {
-	Add(gateway Gateway) error
-	Delete(name string) error
-	Update(name string, gateway Gateway) error
-}
+type (
+	Deployment struct {
+		Name       string
+		NameSpace  string
+		Images     string
+		Replicas   [3]int32
+		CreateTime string
+	}
 
-type HTTPService interface {
-	Add(gateway Gateway) GatewayService
-	Delete(name string) GatewayService
-	Update(name string, gateway Gateway) GatewayService
-}
+	DeploymentStore interface {
+		All(ctx context.Context) ([]*Deployment, error)
+		List(ctx context.Context, namespace string) ([]*Deployment, error)
+	}
+
+	Istio struct {
+		GW Gateway
+		DS DestinationRule
+		VS VirtualService
+	}
+
+	Gateway struct {
+		Name      string
+		Namespace string
+		HostPort  uint32
+	}
+
+	Gateways []Gateway
+
+	DestinationRule struct {
+		Name      string
+		Namespace string
+		Host      string
+	}
+
+	VirtualService struct {
+		Name            string
+		Namespace       string
+		Gateways        Gateways
+		DestinationHost string
+		DestinationPort int
+	}
+
+	IstioStore interface {
+		Add(ctx context.Context, istio Istio) error
+		Delete(ctx context.Context, name, namespace string) error
+		Update(ctx context.Context) error
+		List(ctx context.Context, namespace string) ([]*Gateway, error)
+	}
+)

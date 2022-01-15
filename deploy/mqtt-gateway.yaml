@@ -1,0 +1,43 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: mqtt-edgemesh-gateway
+  namespace: tenant-kymdmim-env-wuu8p1j
+spec:
+  selector:
+    kubeedge: edgemesh-gateway
+  servers:
+    - hosts:
+        - '*'
+      port:
+        name: tcp-0
+        number: 22883
+        protocol: TCP
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: mosquitto-4d76c2e0-36c9-428b-bb7d-e5422b313bc5
+  namespace: tenant-kymdmim-env-wuu8p1j
+spec:
+  host: mosquitto-4d76c2e0-36c9-428b-bb7d-e5422b313bc5
+  trafficPolicy:
+    loadBalancer:
+      simple: RANDOM
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: mqtt-to-out
+  namespace: tenant-kymdmim-env-wuu8p1j
+spec:
+  gateways:
+    - mqtt-edgemesh-gateway
+  hosts:
+    - '*'
+  tcp:
+    - route:
+        - destination:
+            host: mosquitto-4d76c2e0-36c9-428b-bb7d-e5422b313bc5
+            port:
+              number: 1883
