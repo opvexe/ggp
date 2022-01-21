@@ -37,33 +37,32 @@ func NewGatewayService(clientset istioclient.Clientset) *GatewayService {
 
 func (s *GatewayService) Add(ctx context.Context, is *kgway.Istio) error {
 	opt := metav1.CreateOptions{}
-	gw,err:=s.Clientset.NetworkingV1alpha3().Gateways(is.GW.Namespace).
-		Create(ctx,&v1alpha3.Gateway{
-		ObjectMeta: metav1.ObjectMeta{
-			Name: is.GW.Name,
-			Namespace: is.GW.Namespace,
-		},
-		Spec:  networkingv1alpha3.Gateway{
-			Servers:  []*networkingv1alpha3.Server{
-				&networkingv1alpha3.Server{
-					Port:                 &networkingv1alpha3.Port{
-						Number:               is.GW.HostPort,
-						Protocol:             "TCP",
-						Name:                 "tcp-0",
-					},
-					Hosts:                []string{
-						"*",
+	gw, err := s.Clientset.NetworkingV1alpha3().Gateways(is.GW.Namespace).
+		Create(ctx, &v1alpha3.Gateway{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      is.GW.Name,
+				Namespace: is.GW.Namespace,
+			},
+			Spec: networkingv1alpha3.Gateway{
+				Servers: []*networkingv1alpha3.Server{
+					&networkingv1alpha3.Server{
+						Port: &networkingv1alpha3.Port{
+							Number:   is.GW.HostPort,
+							Protocol: "TCP",
+							Name:     "tcp-0",
+						},
+						Hosts: []string{
+							"*",
+						},
 					},
 				},
+				Selector: map[string]string{
+					"kubeedge": "edgemesh-gateway",
+				},
 			},
-			Selector: map[string]string{
-				"kubeedge": "edgemesh-gateway",
-			},
-		}     ,
-	},opt)
-	if err!=nil{
+		}, opt)
+	if err != nil {
 		return err
 	}
-
 
 }
