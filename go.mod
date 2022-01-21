@@ -1,4 +1,4 @@
-module x6t.io/kgway
+module x6t.io/ggp
 
 go 1.16
 

@@ -5,5 +5,5 @@
 ### Usage 
 
 ```shell
-git clone https://gitlab.com/taoshumin/kubeedge-gateway.git kgway
+git clone https://gitlab.com/taoshumin/kubeedge-gateway.git ggp
 ```
