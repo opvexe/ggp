@@ -18,52 +18,19 @@ package ggp
 
 import "context"
 
-type (
-	Deployment struct {
-		Name       string
-		NameSpace  string
-		Images     string
-		Replicas   [3]int32
-		CreateTime string
-	}
+type Deployment struct {
+	Name       string   `json:"name"`
+	NameSpace  string   `json:"name_space"`
+	Images     string   `json:"images"`
+	Replicas   [3]int32 `json:"replicas"`
+	CreateTime string   `json:"create_time"`
+}
 
-	DeploymentStore interface {
-		All(ctx context.Context) ([]*Deployment, error)
-		List(ctx context.Context, namespace string) ([]*Deployment, error)
-	}
+type RuntimeDeployment interface {
+	List(ctx context.Context, namespace string) ([]*Deployment, error)
+	All(ctx context.Context) ([]*Deployment, error)
+}
 
-	Istio struct {
-		GW Gateway
-		DS DestinationRule
-		VS VirtualService
-	}
-
-	Gateway struct {
-		Name      string
-		Namespace string
-		HostPort  uint32
-	}
-
-	Gateways []Gateway
-
-	DestinationRule struct {
-		Name      string
-		Namespace string
-		Host      string
-	}
-
-	VirtualService struct {
-		Name            string
-		Namespace       string
-		Gateways        Gateways
-		DestinationHost string
-		DestinationPort int
-	}
-
-	IstioStore interface {
-		Add(ctx context.Context, istio Istio) error
-		Delete(ctx context.Context, name, namespace string) error
-		Update(ctx context.Context) error
-		List(ctx context.Context, namespace string) ([]*Gateway, error)
-	}
-)
+type RuntimeNamespace interface {
+	List(ctx context.Context) ([]string, error)
+}

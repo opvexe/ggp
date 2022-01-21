@@ -14,38 +14,39 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package k8s
+package apis
 
 import (
 	"context"
 	"fmt"
+	"x6t.io/ggp"
 
 	core "k8s.io/api/core/v1"
 	meta1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
-	"x6t.io/kgway"
 )
 
 type DeploymentService struct {
 	kubernetes.Interface
+	ns ggp.RuntimeNamespace
 }
 
-func NewDeploymentService(kube kubernetes.Interface) *DeploymentService {
+func NewDeploymentService(kube kubernetes.Interface, ns ggp.RuntimeNamespace) *DeploymentService {
 	return &DeploymentService{
 		Interface: kube,
 	}
 }
 
-func (s *DeploymentService) List(ctx context.Context, namespace string) ([]*kgway.Deployment, error) {
+func (s *DeploymentService) List(ctx context.Context, namespace string) ([]*ggp.Deployment, error) {
 	opts := meta1.ListOptions{}
 	list, err := s.AppsV1().Deployments(namespace).List(ctx, opts)
 	if err != nil {
 		return nil, err
 	}
 
-	items := make([]*kgway.Deployment, len(list.Items))
+	items := make([]*ggp.Deployment, len(list.Items))
 	for i, item := range list.Items {
-		items[i] = &kgway.Deployment{
+		items[i] = &ggp.Deployment{
 			Name:      item.Name,
 			NameSpace: item.Namespace,
 			Images:    s.Images(item.Spec.Template.Spec.Containers),
@@ -60,10 +61,21 @@ func (s *DeploymentService) List(ctx context.Context, namespace string) ([]*kgwa
 	return items, nil
 }
 
-func (s *DeploymentService) All(ctx context.Context) ([]*kgway.Deployment, error) {
-	// TODO
+func (s *DeploymentService) All(ctx context.Context) ([]*ggp.Deployment, error) {
+	namespaces, err := s.ns.List(ctx)
+	if err != nil {
+		return nil, err
+	}
 
-	return nil, nil
+	deployments := make([]*ggp.Deployment, len(namespaces))
+	for _, ns := range namespaces {
+		deployment, err := s.List(ctx, ns)
+		if err != nil {
+			return nil, err
+		}
+		deployments = append(deployments, deployment...)
+	}
+	return deployments, nil
 }
 
 func (s *DeploymentService) Images(containers []core.Container) string {
