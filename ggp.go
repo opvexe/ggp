@@ -26,11 +26,11 @@ type Deployment struct {
 	CreateTime string   `json:"create_time"`
 }
 
+type RuntimeNamespace interface {
+	List(ctx context.Context) ([]string, error)
+}
+
 type RuntimeDeployment interface {
 	List(ctx context.Context, namespace string) ([]*Deployment, error)
 	All(ctx context.Context) ([]*Deployment, error)
-}
-
-type RuntimeNamespace interface {
-	List(ctx context.Context) ([]string, error)
 }
