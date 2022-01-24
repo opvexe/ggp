@@ -16,9 +16,5 @@ limitations under the License.
 
 package main
 
-import "fmt"
-
 func main() {
-	fmt.Println("remote ssh")
-	fmt.Println("remote container")
 }
