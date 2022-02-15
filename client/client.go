@@ -20,6 +20,7 @@ import (
 	istio "istio.io/client-go/pkg/clientset/versioned"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 )
 
@@ -67,6 +68,18 @@ func NewManagerConfigClient(kubeConfig []byte) (*ManagerClient, error) {
 		dynamicClient: dynamicClient,
 		istioClient:   istioClient,
 	}, nil
+}
+
+func NewRestClusterClient() (kubernetes.Interface, error) {
+	config, err := rest.InClusterConfig()
+	if err != nil {
+		return nil, err
+	}
+	clientSet, err := kubernetes.NewForConfig(config)
+	if err != nil {
+		return nil, err
+	}
+	return clientSet, nil
 }
 
 // NewKubeClient return use in pod container created by k8s.
