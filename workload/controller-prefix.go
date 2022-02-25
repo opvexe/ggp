@@ -21,17 +21,37 @@ import "path/filepath"
 const (
 	DefaultNameSpacePrefix = "ggp-namespace"
 	DefaultPodSpacePrefix  = "ggp-pod"
+	DefaultDeploymentPrefix = "ggp-deployment"
+	DefaultEndPointsPrefix = "ggp-endpoints"
 )
+
+// Namespace related prefix.
 
 func NameSpacePrefix(name string) string {
 	return filepath.Join(DefaultNameSpacePrefix, name)
 }
 
+// Pod related prefix.
+
 func PodSpacePrefix(name string) string {
 	return filepath.Join(DefaultPodSpacePrefix, name)
 }
+
+// Event related prefix
 
 func PodEventMessagePrefix(namespace,kind,name string) string {
 	return filepath.Join(namespace,kind,name)
 }
 
+// Deployment related prefix
+
+func DeploymentSpacePrefix(namespace string)  string {
+	return filepath.Join(DefaultDeploymentPrefix,namespace)
+}
+
+
+// Endpoints  related prefix
+
+func EndpointsSpacePrefix(namespace string) string  {
+	return filepath.Join(DefaultEndPointsPrefix,namespace)
+}

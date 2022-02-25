@@ -22,6 +22,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	extensions "k8s.io/api/extensions/v1beta1"
 	storagev1 "k8s.io/api/storage/v1"
+	v1 "k8s.io/client-go/applyconfigurations/apps/v1"
 	"k8s.io/client-go/informers"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/cache"
@@ -157,7 +158,13 @@ func (c *controller) OnAdd(obj interface{}) {
 	}
 	// deployment
 	if deployment, ok := obj.(*appsv1.Deployment); ok {
-
+		prix  := DeploymentSpacePrefix(deployment.Namespace)
+		if list, ok := c.cachesMap.Load(prix); ok {
+			list = append(list.([]*v1.Deployment), deployment)
+			c.cachesMap.Store(prix, list)
+		} else {
+			c.cachesMap.Store(prix, []*v1.Deployment{deployment})
+		}
 	}
 
 	// configMap
@@ -216,13 +223,16 @@ func (c *controller) AddNameSpaceEventHandler() cache.ResourceEventHandlerFuncs 
 func (c *controller) AddPodEventHandler() cache.ResourceEventHandlerFuncs {
 	return cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
-
+			pod := obj.(*corev1.Pod)
+			c.cachesMap.Store(PodSpacePrefix(pod.Namespace), pod)
 		},
 		DeleteFunc: func(obj interface{}) {
-
+			pod := obj.(*corev1.Pod)
+			c.cachesMap.Delete(PodSpacePrefix(pod.Namespace))
 		},
 		UpdateFunc: func(oldObj, newObj interface{}) {
-
+			pod := newObj.(*corev1.Pod)
+			c.cachesMap.Store(PodSpacePrefix(pod.Namespace), pod)
 		},
 	}
 }
@@ -231,13 +241,16 @@ func (c *controller) AddPodEventHandler() cache.ResourceEventHandlerFuncs {
 func (c *controller) AddEndpointsEventHandler() cache.ResourceEventHandlerFuncs {
 	return cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
-
+			ep := obj.(*corev1.Endpoints)
+			c.cachesMap.Store(EndpointsSpacePrefix(ep.Namespace), ep)
 		},
 		DeleteFunc: func(obj interface{}) {
-
+			ep := obj.(*corev1.Endpoints)
+			c.cachesMap.Delete(EndpointsSpacePrefix(ep.Namespace))
 		},
 		UpdateFunc: func(oldObj, newObj interface{}) {
-
+			ep := newObj.(*corev1.Endpoints)
+			c.cachesMap.Store(EndpointsSpacePrefix(ep.Namespace),ep)
 		},
 	}
 }
