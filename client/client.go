@@ -70,6 +70,7 @@ func NewManagerConfigClient(kubeConfig []byte) (*ManagerClient, error) {
 	}, nil
 }
 
+// TODO
 func NewRestClusterClient() (kubernetes.Interface, error) {
 	config, err := rest.InClusterConfig()
 	if err != nil {
@@ -83,6 +84,7 @@ func NewRestClusterClient() (kubernetes.Interface, error) {
 }
 
 // NewKubeClient return use in pod container created by k8s.
+// TODO
 func NewKubeClient(config *KubeAPIConfig) (kubernetes.Interface, error) {
 	kubeConfig, err := clientcmd.BuildConfigFromFlags(config.Master, config.KubeConfig)
 	if err != nil {

@@ -1,5 +1,5 @@
 /*
-Copyright 2021 The Beijing Gridsum Technology Co., Ltd Authors.
+Copyright 2021 The Gridsum Authors.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -14,8 +14,24 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package main
+package workload
 
-func main() {
+import "path/filepath"
 
+const (
+	DefaultNameSpacePrefix = "ggp-namespace"
+	DefaultPodSpacePrefix  = "ggp-pod"
+)
+
+func NameSpacePrefix(name string) string {
+	return filepath.Join(DefaultNameSpacePrefix, name)
 }
+
+func PodSpacePrefix(name string) string {
+	return filepath.Join(DefaultPodSpacePrefix, name)
+}
+
+func PodEventMessagePrefix(namespace,kind,name string) string {
+	return filepath.Join(namespace,kind,name)
+}
+

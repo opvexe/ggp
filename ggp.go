@@ -16,21 +16,24 @@ limitations under the License.
 
 package ggp
 
-import "context"
+import (
+	corev2 "k8s.io/api/core/v1"
+	corev1 "k8s.io/client-go/listers/core/v1"
+)
 
-type Deployment struct {
-	Name       string   `json:"name"`
-	NameSpace  string   `json:"name_space"`
-	Images     string   `json:"images"`
-	Replicas   [3]int32 `json:"replicas"`
-	CreateTime string   `json:"create_time"`
-}
-
-type RuntimeNamespace interface {
-	List(ctx context.Context) ([]string, error)
-}
-
-type RuntimeDeployment interface {
-	List(ctx context.Context, namespace string) ([]*Deployment, error)
-	All(ctx context.Context) ([]*Deployment, error)
+type ControllerService interface {
+	// Ready k8s Informer ready status.
+	Ready() bool
+	// Start start k8s Informer.
+	Start() error
+	// PodLister is k8s pod lister.
+	PodLister() corev1.PodLister
+	// GetPod return get the specified pod resource based on the namespace and pod name.
+	GetPod(namespace,name string) *corev2.Pod
+	// GetPodByNameSpace return get all pods under this namespace.
+	GetPodByNameSpace(namespace string) ([]*corev2.Pod,error)
+	// GetPodByLabel return get exact matching pods based on namespace and label.
+	GetPodByLabel(namespace string,labels map[string]string) ([]*corev2.Pod,error)
+	// GetPodEventMessage return used to save events, only the latest one is saved. make sure it's unique.
+	GetPodEventMessage(namespace,kind,name string) string
 }

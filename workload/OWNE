@@ -1,0 +1,5 @@
+### 注意点
+
+- controller: 主要是监听队列的资源。
+- controller-prefix: 主要用于区分资源，使用前缀的形式。
+- controller-func: 主要提供对外使用的方法，方便修改和自定义。
