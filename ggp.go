@@ -29,11 +29,11 @@ type ControllerService interface {
 	// PodLister is k8s pod lister.
 	PodLister() corev1.PodLister
 	// GetPod return get the specified pod resource based on the namespace and pod name.
-	GetPod(namespace,name string) *corev2.Pod
+	GetPod(namespace, name string) *corev2.Pod
 	// GetPodByNameSpace return get all pods under this namespace.
-	GetPodByNameSpace(namespace string) ([]*corev2.Pod,error)
+	GetPodByNameSpace(namespace string) ([]*corev2.Pod, error)
 	// GetPodByLabel return get exact matching pods based on namespace and label.
-	GetPodByLabel(namespace string,labels map[string]string) ([]*corev2.Pod,error)
+	GetPodByLabel(namespace string, labels map[string]string) ([]*corev2.Pod, error)
 	// GetPodEventMessage return used to save events, only the latest one is saved. make sure it's unique.
-	GetPodEventMessage(namespace,kind,name string) string
+	GetPodEventMessage(namespace, kind, name string) string
 }

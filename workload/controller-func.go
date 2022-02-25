@@ -23,12 +23,12 @@ import (
 )
 
 // loadPodPrefix distinguish prefixes are k 8 s resources of pods.
-func (c *controller) loadPodPrefix(namespace string) (interface{},bool) {
+func (c *controller) loadPodPrefix(namespace string) (interface{}, bool) {
 	return c.cachesMap.Load(PodSpacePrefix(namespace))
 }
 
 // GetPod return get the specified pod resource based on the namespace and pod name.
-func (c *controller) GetPod(namespace,name string) *corev1.Pod {
+func (c *controller) GetPod(namespace, name string) *corev1.Pod {
 	if list, ok := c.loadPodPrefix(namespace); ok {
 		for _, pod := range list.([]*corev1.Pod) {
 			if pod.Name == name {
@@ -40,7 +40,7 @@ func (c *controller) GetPod(namespace,name string) *corev1.Pod {
 }
 
 // GetPodByNameSpace return get all pods under this namespace.
-func (c *controller) GetPodByNameSpace(namespace string) ([]*corev1.Pod,error)  {
+func (c *controller) GetPodByNameSpace(namespace string) ([]*corev1.Pod, error) {
 	if list, ok := c.loadPodPrefix(namespace); ok {
 		return list.([]*corev1.Pod), nil
 	}
@@ -48,7 +48,7 @@ func (c *controller) GetPodByNameSpace(namespace string) ([]*corev1.Pod,error)  
 }
 
 // GetPodByLabel return get exact matching pods based on namespace and label.
-func (c *controller) GetPodByLabel(namespace string,labels map[string]string) ([]*corev1.Pod,error) {
+func (c *controller) GetPodByLabel(namespace string, labels map[string]string) ([]*corev1.Pod, error) {
 	ret := make([]*corev1.Pod, 0)
 	if list, ok := c.loadPodPrefix(namespace); ok {
 		for _, pod := range list.([]*corev1.Pod) {
@@ -64,7 +64,7 @@ func (c *controller) GetPodByLabel(namespace string,labels map[string]string) ([
 }
 
 // GetPodEventMessage return used to save events, only the latest one is saved. make sure it's unique.
-func (c *controller) GetPodEventMessage(namespace,kind,name string) string  {
+func (c *controller) GetPodEventMessage(namespace, kind, name string) string {
 	key := PodEventMessagePrefix(name, kind, name)
 	if v, ok := c.cachesMap.Load(key); ok {
 		return v.(*corev1.Event).Message

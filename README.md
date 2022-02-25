@@ -14,3 +14,8 @@ nodes:
 - role: worker
 - role: worker
 ```
+
+## Install (Macpro M1 Support version)
+```shell
+kind create cluster --config cluster.yaml --image kindest/node:v1.19.11
+```
