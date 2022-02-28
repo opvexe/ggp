@@ -138,104 +138,113 @@ func (c *controller) Start() error {
 func (c *controller) OnAdd(obj interface{}) {
 	// ingress
 	if ingress, ok := obj.(*extensions.Ingress); ok {
-		if list, ok := c.cachesMap.Load(c.Prefix(Ingress,ingress.Namespace)); ok {
+		if list, ok := c.cachesMap.Load(c.Prefix(Ingress, ingress.Namespace)); ok {
 			list = append(list.([]*extensions.Ingress), ingress)
-			c.cachesMap.Store(c.Prefix(Ingress,ingress.Namespace), list)
+			c.cachesMap.Store(c.Prefix(Ingress, ingress.Namespace), list)
 		} else {
-			c.cachesMap.Store(c.Prefix(Ingress,ingress.Namespace), []*extensions.Ingress{ingress})
+			c.cachesMap.Store(c.Prefix(Ingress, ingress.Namespace), []*extensions.Ingress{ingress})
 		}
 	}
 
 	// service
 	if service, ok := obj.(*corev1.Service); ok {
-		if list, ok := c.cachesMap.Load((ServiceSpacePrefix(service.Namespace));ok {
+		if list, ok := c.cachesMap.Load(c.Prefix(Service, service.Namespace)); ok {
 			list = append(list.([]*corev1.Service), service)
-			c.cachesMap.Store(ServiceSpacePrefix(service.Namespace), list)
+			c.cachesMap.Store(c.Prefix(Service, service.Namespace), list)
 		} else {
-			c.cachesMap.Store(ServiceSpacePrefix(service.Namespace), []*corev1.Service{service})
+			c.cachesMap.Store(c.Prefix(Service, service.Namespace), []*corev1.Service{service})
 		}
 	}
 
 	// secret
 	if secret, ok := obj.(*corev1.Secret); ok {
-		if list,ok := c.cachesMap.Load(SecretSpacePrefix(secret.Namespace));ok {
+		if list, ok := c.cachesMap.Load(c.Prefix(Secret, secret.Namespace)); ok {
 			list = append(list.([]*corev1.Secret), secret)
-			c.cachesMap.Store(SecretSpacePrefix(secret.Namespace), list)
-		}else {
-			c.cachesMap.Store(SecretSpacePrefix(secret.Namespace), []*corev1.Secret{secret})
+			c.cachesMap.Store(c.Prefix(Secret, secret.Namespace), list)
+		} else {
+			c.cachesMap.Store(c.Prefix(Secret, secret.Namespace), []*corev1.Secret{secret})
 		}
 	}
 
 	// StatefulSet
 	if statefulset, ok := obj.(*appsv1.StatefulSet); ok {
-		if list,ok := c.cachesMap.Load(StatefulSetSpacePrefix(statefulset.Namespace));ok {
+		if list, ok := c.cachesMap.Load(c.Prefix(StatefulSet, statefulset.Namespace)); ok {
 			list = append(list.([]*appsv1.StatefulSet), statefulset)
-			c.cachesMap.Store(StatefulSetSpacePrefix(statefulset.Namespace), list)
-		}else {
-			c.cachesMap.Store(StatefulSetSpacePrefix(statefulset.Namespace), []*appsv1.StatefulSet{statefulset})
+			c.cachesMap.Store(c.Prefix(StatefulSet, statefulset.Namespace), list)
+		} else {
+			c.cachesMap.Store(c.Prefix(StatefulSet, statefulset.Namespace), []*appsv1.StatefulSet{statefulset})
 		}
 	}
 
 	// deployment
 	if deployment, ok := obj.(*appsv1.Deployment); ok {
-		if list, ok := c.cachesMap.Load(DeploymentSpacePrefix(deployment.Namespace)); ok {
+		if list, ok := c.cachesMap.Load(c.Prefix(Deployment, deployment.Namespace)); ok {
 			list = append(list.([]*appsv1.Deployment), deployment)
-			c.cachesMap.Store(DeploymentSpacePrefix(deployment.Namespace), list)
+			c.cachesMap.Store(c.Prefix(Deployment, deployment.Namespace), list)
 		} else {
-			c.cachesMap.Store(DeploymentSpacePrefix(deployment.Namespace), []*appsv1.Deployment{deployment})
+			c.cachesMap.Store(c.Prefix(Deployment, deployment.Namespace), []*appsv1.Deployment{deployment})
 		}
 	}
 
 	// configMap
 	if configmap, ok := obj.(*corev1.ConfigMap); ok {
-		if list, ok := c.cachesMap.Load(ConfigMapSpacePrefix(configmap.Namespace)); ok {
+		if list, ok := c.cachesMap.Load(c.Prefix(ConfigMap, configmap.Namespace)); ok {
 			list = append(list.([]*corev1.ConfigMap), configmap)
-			c.cachesMap.Store(ConfigMapSpacePrefix(configmap.Namespace), list)
+			c.cachesMap.Store(c.Prefix(ConfigMap, configmap.Namespace), list)
 		} else {
-			c.cachesMap.Store(ConfigMapSpacePrefix(configmap.Namespace), []*corev1.ConfigMap{configmap})
+			c.cachesMap.Store(c.Prefix(ConfigMap, configmap.Namespace), []*corev1.ConfigMap{configmap})
 		}
 	}
 
 	// ReplicaSet
 	if replicaset, ok := obj.(*appsv1.ReplicaSet); ok {
-		if list, ok := c.cachesMap.Load(ReplicaSetSpacePrefix(replicaset.Namespace)); ok {
+		if list, ok := c.cachesMap.Load(c.Prefix(ReplicaSet, replicaset.Namespace)); ok {
 			list = append(list.([]*appsv1.ReplicaSet), replicaset)
-			c.cachesMap.Store(ReplicaSetSpacePrefix(replicaset.Namespace), list)
+			c.cachesMap.Store(c.Prefix(ReplicaSet, replicaset.Namespace), list)
 		} else {
-			c.cachesMap.Store(ReplicaSetSpacePrefix(replicaset.Namespace), []*appsv1.ReplicaSet{replicaset})
+			c.cachesMap.Store(c.Prefix(ReplicaSet, replicaset.Namespace), []*appsv1.ReplicaSet{replicaset})
 		}
 	}
 
 	// StorageClass
 	if sc, ok := obj.(*storagev1.StorageClass); ok {
-		if list, ok := c.cachesMap.Load(ConfigMapSpacePrefix(replicaset.Namespace)); ok {
-			list = append(list.([]*appsv1.ReplicaSet), replicaset)
-			c.cachesMap.Store(ConfigMapSpacePrefix(replicaset.Namespace), list)
+		if list, ok := c.cachesMap.Load(c.Prefix(StorageClass, sc.Namespace)); ok {
+			list = append(list.([]*storagev1.StorageClass), sc)
+			c.cachesMap.Store(c.Prefix(StorageClass, sc.Namespace), list)
 		} else {
-			c.cachesMap.Store(ConfigMapSpacePrefix(replicaset.Namespace), []*appsv1.ReplicaSet{replicaset})
+			c.cachesMap.Store(c.Prefix(StorageClass, sc.Namespace), []*storagev1.StorageClass{sc})
 		}
 	}
 
 	// Claims
 	if claim, ok := obj.(*corev1.PersistentVolumeClaim); ok {
-
+		if list, ok := c.cachesMap.Load(c.Prefix(PersistentVolumeClaim, claim.Namespace)); ok {
+			list = append(list.([]*corev1.PersistentVolumeClaim), claim)
+			c.cachesMap.Store(c.Prefix(PersistentVolumeClaim, claim.Namespace), list)
+		} else {
+			c.cachesMap.Store(c.Prefix(PersistentVolumeClaim, claim.Namespace), []*corev1.PersistentVolumeClaim{claim})
+		}
 	}
 
 	// event
 	if event, ok := obj.(*corev1.Event); ok {
-		if list, ok := c.cachesMap.Load(PodEventMessagePrefix(event.Namespace, event.InvolvedObject.Kind, event.InvolvedObject.Name)); ok {
+		if list, ok := c.cachesMap.Load(c.Prefix(Event, event.Namespace, event.InvolvedObject.Kind, event.InvolvedObject.Name)); ok {
 			list = append(list.([]*corev1.Event), event)
-			c.cachesMap.Store(PodEventMessagePrefix(event.Namespace, event.InvolvedObject.Kind, event.InvolvedObject.Name), list)
+			c.cachesMap.Store(c.Prefix(Event, event.Namespace, event.InvolvedObject.Kind, event.InvolvedObject.Name), list)
 		} else {
-			c.cachesMap.Store(PodEventMessagePrefix(event.Namespace, event.InvolvedObject.Kind, event.InvolvedObject.Name), []*corev1.Event{event})
+			c.cachesMap.Store(c.Prefix(Event, event.Namespace, event.InvolvedObject.Kind, event.InvolvedObject.Name), []*corev1.Event{event})
 		}
 	}
 
 	// HorizontalPodAutoscaler
 	if hpa, ok := obj.(*autoscalingv2.HorizontalPodAutoscaler); ok {
-
+		if list, ok := c.cachesMap.Load(c.Prefix(HorizontalPodAutoscaler, hpa.Namespace)); ok {
+			list = append(list.([]*autoscalingv2.HorizontalPodAutoscaler), hpa)
+			c.cachesMap.Store(c.Prefix(HorizontalPodAutoscaler, hpa.Namespace), list)
+		} else {
+			c.cachesMap.Store(c.Prefix(HorizontalPodAutoscaler, hpa.Namespace), []*autoscalingv2.HorizontalPodAutoscaler{hpa})
+		}
 	}
-
 }
 
 func (c *controller) OnUpdate(oldObj, newObj interface{}) {
@@ -269,11 +278,11 @@ func (c *controller) AddPodEventHandler() cache.ResourceEventHandlerFuncs {
 	return cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
 			pod := obj.(*corev1.Pod)
-			if list, ok := c.cachesMap.Load(c.Prefix(Pod,pod.Namespace)); ok {
+			if list, ok := c.cachesMap.Load(c.Prefix(Pod, pod.Namespace)); ok {
 				list = append(list.([]*corev1.Pod), pod)
-				c.cachesMap.Store(c.Prefix(Pod,pod.Namespace), list)
+				c.cachesMap.Store(c.Prefix(Pod, pod.Namespace), list)
 			} else {
-				c.cachesMap.Store(c.Prefix(Pod,pod.Namespace), []*corev1.Pod{pod})
+				c.cachesMap.Store(c.Prefix(Pod, pod.Namespace), []*corev1.Pod{pod})
 			}
 		},
 		DeleteFunc: func(obj interface{}) {

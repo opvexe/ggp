@@ -21,17 +21,19 @@ import (
 )
 
 const (
-	DefaultNameSpacePrefix         = "ggp-namespace"
-	DefaultIngressSpacePrefix      = "ggp-ingress"
-	DefaultPodSpacePrefix          = "ggp-pod"
-	DefaultServicePrefix           = "ggp-service"
-	DefaultSecretPrefix            = "ggp-secret"
-	DefaultStatefulSetSpacePrefix  = "ggp-stateful-set"
-	DefaultDeploymentPrefix        = "ggp-deployment"
-	DefaultConfigMapPrefix         = "ggp-configmap"
-	DefaultReplicaSetSpacePrefix   = "ggp-replica-set"
-	DefaultStorageClassSpacePrefix = "ggp-storage-class"
-	DefaultEndPointsPrefix         = "ggp-endpoints"
+	DefaultNameSpacePrefix               = "ggp-namespace"
+	DefaultIngressSpacePrefix            = "ggp-ingress"
+	DefaultPodSpacePrefix                = "ggp-pod"
+	DefaultServicePrefix                 = "ggp-service"
+	DefaultSecretPrefix                  = "ggp-secret"
+	DefaultStatefulSetSpacePrefix        = "ggp-stateful-set"
+	DefaultDeploymentPrefix              = "ggp-deployment"
+	DefaultConfigMapPrefix               = "ggp-configmap"
+	DefaultReplicaSetSpacePrefix         = "ggp-replica-set"
+	DefaultStorageClassSpacePrefix       = "ggp-storage-class"
+	DefaultPersistentVolumeClaimPrefix   = "ggp-persistentvolume-claim"
+	DefaultEndPointsPrefix               = "ggp-endpoints"
+	DefaultHorizontalPodAutoscalerPrefix = "ggp-horizontal-pod-autoscaler"
 )
 
 type PrefixType int
@@ -48,7 +50,9 @@ const (
 	ConfigMap
 	ReplicaSet
 	StorageClass
+	PersistentVolumeClaim
 	Endpoints
+	HorizontalPodAutoscaler
 )
 
 func (p PrefixType) Strings(s ...string) string {
@@ -73,13 +77,16 @@ func (p PrefixType) Strings(s ...string) string {
 		return filepath.Join(DefaultReplicaSetSpacePrefix, s[0])
 	case StorageClass:
 		return filepath.Join(DefaultStorageClassSpacePrefix, s[0])
+	case PersistentVolumeClaim:
+		return filepath.Join(DefaultPersistentVolumeClaimPrefix, s[0])
 	case Endpoints:
 		return filepath.Join(DefaultEndPointsPrefix, s[0])
+	case HorizontalPodAutoscaler:
+		return filepath.Join(DefaultHorizontalPodAutoscalerPrefix, s[0])
 	case Event:
 		if len(s) != 3 {
 			return ""
 		}
-		// [namespace,kind,name]
 		return filepath.Join(s[0], s[1], s[2])
 	default:
 		return ""
@@ -97,64 +104,10 @@ func NameSpacePrefix(name string) string {
 	return filepath.Join(DefaultNameSpacePrefix, name)
 }
 
-// IngressSpacePrefix Ingress related prefix.
-// Deprecated: will be removed in the next commit.
-func IngressSpacePrefix(namespace string) string {
-	return filepath.Join(DefaultIngressSpacePrefix, namespace)
-}
-
 // PodSpacePrefix Pod related prefix.
 // Deprecated: will be removed in the next commit.
 func PodSpacePrefix(namespace string) string {
 	return filepath.Join(DefaultPodSpacePrefix, namespace)
-}
-
-// ServiceSpacePrefix related prefix.
-// Deprecated: will be removed in the next commit.
-func ServiceSpacePrefix(namespace string) string {
-	return filepath.Join(DefaultServicePrefix, namespace)
-}
-
-// SecretSpacePrefix related prefix.
-// Deprecated: will be removed in the next commit.
-func SecretSpacePrefix(namespace string) string {
-	return filepath.Join(DefaultSecretPrefix, namespace)
-}
-
-// StatefulSetSpacePrefix related prefix
-// Deprecated: will be removed in the next commit.
-func StatefulSetSpacePrefix(namespace string) string {
-	return filepath.Join(DefaultStatefulSetSpacePrefix, namespace)
-}
-
-// PodEventMessagePrefix related prefix
-// Deprecated: will be removed in the next commit.
-func PodEventMessagePrefix(namespace, kind, name string) string {
-	return filepath.Join(namespace, kind, name)
-}
-
-// DeploymentSpacePrefix related prefix
-// Deprecated: will be removed in the next commit.
-func DeploymentSpacePrefix(namespace string) string {
-	return filepath.Join(DefaultDeploymentPrefix, namespace)
-}
-
-// ConfigMapSpacePrefix related prefix
-// Deprecated: will be removed in the next commit.
-func ConfigMapSpacePrefix(namespace string) string {
-	return filepath.Join(DefaultConfigMapPrefix, namespace)
-}
-
-// ReplicaSetSpacePrefix related prefix
-// Deprecated: will be removed in the next commit.
-func ReplicaSetSpacePrefix(namespace string) string {
-	return filepath.Join(DefaultReplicaSetSpacePrefix, namespace)
-}
-
-// StorageClassSpacePrefix related prefix
-// Deprecated: will be removed in the next commit.
-func StorageClassSpacePrefix(namespace string) string {
-	return filepath.Join(DefaultStorageClassSpacePrefix, namespace)
 }
 
 // EndpointsSpacePrefix related prefix
