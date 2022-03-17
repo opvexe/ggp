@@ -110,6 +110,12 @@ func PodSpacePrefix(namespace string) string {
 	return filepath.Join(DefaultPodSpacePrefix, namespace)
 }
 
+// PodEventMessagePrefix related prefix
+// Deprecated: will be removed in the next commit.
+func PodEventMessagePrefix(namespace, kind, name string) string {
+	return filepath.Join(namespace, kind, name)
+}
+
 // EndpointsSpacePrefix related prefix
 // Deprecated: will be removed in the next commit.
 func EndpointsSpacePrefix(namespace string) string {

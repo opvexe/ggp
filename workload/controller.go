@@ -287,11 +287,11 @@ func (c *controller) AddPodEventHandler() cache.ResourceEventHandlerFuncs {
 		},
 		DeleteFunc: func(obj interface{}) {
 			pod := obj.(*corev1.Pod)
-			if list, ok := c.cachesMap.Load(PodSpacePrefix(pod.Namespace)); ok {
+			if list, ok := c.cachesMap.Load(c.Prefix(Pod,pod.Namespace)); ok {
 				for i, pods := range list.([]*corev1.Pod) {
 					if pods.Name == pod.Name {
 						newlist := append(list.([]*corev1.Pod)[:i], list.([]*corev1.Pod)[i+1:]...)
-						c.cachesMap.Store(PodSpacePrefix(pod.Namespace), newlist)
+						c.cachesMap.Store(c.Prefix(Pod,pod.Namespace), newlist)
 						break
 					}
 				}
@@ -300,7 +300,7 @@ func (c *controller) AddPodEventHandler() cache.ResourceEventHandlerFuncs {
 		},
 		UpdateFunc: func(oldObj, newObj interface{}) {
 			pod := newObj.(*corev1.Pod)
-			if list, ok := c.cachesMap.Load(PodSpacePrefix(pod.Namespace)); ok {
+			if list, ok := c.cachesMap.Load(c.Prefix(Pod,pod.Namespace)); ok {
 				for i, oldPod := range list.([]*corev1.Pod) {
 					if oldPod.Name == pod.Name {
 						list.([]*corev1.Pod)[i] = pod
